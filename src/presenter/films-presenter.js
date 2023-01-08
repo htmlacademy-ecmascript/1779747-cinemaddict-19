@@ -1,12 +1,12 @@
-import FilmView from '../view/film-view.js';
+import FilmsView from '../view/films-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsListContainerView from '../view/films-list-container-view.js';
 import FilmCardView from '../view/film-card-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
 import {render} from '../render.js';
 
-export default class FilmPresenter {
-  filmComponent = new FilmView();
+export default class FilmsPresenter {
+  filmComponent = new FilmsView();
   filmList = new FilmsListView();
   filmListComponent = new FilmsListContainerView();
 
