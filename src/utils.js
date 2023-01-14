@@ -45,4 +45,4 @@ function getdescriptionSize (description) {
 }
 
 
-export {getRandomArrayElement, getRandomNumber, getDescriptionRandom, getCommentsRandom, humanizeTaskDueDate, humanizeDuration, getdescriptionSize, getRandomBoolean };
+export {getRandomArrayElement, getRandomNumber, getDescriptionRandom, getCommentsRandom, humanizeTaskDueDate, humanizeDuration, getdescriptionSize};
