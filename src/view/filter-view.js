@@ -1,5 +1,6 @@
 import {createElement} from '../render.js';
 
+
 function createFilterTemplate() {
   return (
     `<nav class="main-navigation">
