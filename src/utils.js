@@ -1,9 +1,5 @@
 import dayjs from 'dayjs';
 
-function getRandomBoolean () {
-  return Math.random() < 0.5;
-}
-
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
