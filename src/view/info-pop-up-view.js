@@ -1,23 +1,22 @@
 import {createElement} from '../render.js';
-import {humanizeTaskDueDate, humanizeDuration} from '../utils.js';
+import {humanizeFilmDueDate, humanizeDuration} from '../utils.js';
 import {mockComments} from '../mock/comment.js';
 
 
-const fragmentComment = new DocumentFragment();
-
 function createInfoPopUpGenreTemplate(genres){
-  for (const genre of genres){
-    const spanGenreTag = `<span class="film-details__genre">${genre}</span>`;
-    fragmentComment.append(spanGenreTag);
-  }
-  return fragmentComment.textContent;
+  return (`${Object.entries(genres).map(([genre]) =>
+    `<span class="film-details__genre">${genre}</span>`).join('')
+  }`
+  );
 }
 
 function createInfoPopUpCommentTemplate(comments){
-  for (const commentInfo of comments){
-    const {author, comment, emotion, date} = mockComments.find((x) => x.id === commentInfo);
+  let liCommentTag = '';
+  for (const commentId of comments){
+    if (mockComments.find((x) => x.id === commentId)) {
+      const {author, comment, emotion, date} = mockComments[commentId];
 
-    const liCommentTag = `<li class="film-details__comment">
+      liCommentTag += `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
               <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
             </span>
@@ -25,14 +24,14 @@ function createInfoPopUpCommentTemplate(comments){
               <p class="film-details__comment-text">${comment}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${author}</span>
-                <span class="film-details__comment-day">${humanizeTaskDueDate(date, 'YYYY/MM/DD HH:mm')}</span>
+                <span class="film-details__comment-day">${humanizeFilmDueDate(date, 'YYYY/MM/DD HH:mm')}</span>
                 <button class="film-details__comment-delete">Delete</button>
               </p>
             </div>
           </li>`;
-    fragmentComment.append(liCommentTag);
+    }
   }
-  return fragmentComment.textContent;
+  return liCommentTag;
 }
 
 
@@ -81,7 +80,7 @@ function createInfoPopUpTemplate(film) {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${humanizeTaskDueDate(filmInfo.releaseDate, 'D MMMM YYYY')}</td>
+                <td class="film-details__cell">${humanizeFilmDueDate(filmInfo.releaseDate, 'D MMMM YYYY')}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Duration</td>

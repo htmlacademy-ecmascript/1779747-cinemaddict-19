@@ -22,5 +22,3 @@ render(new SortView(), siteMainElement);
 render(new FooterStatisticsView(), footerElement);
 render(new InfoPopUpView({film: filmsModel.getFilms()[0]}), bodyElement);
 filmsPresenter.init();
-
-export {bodyElement};

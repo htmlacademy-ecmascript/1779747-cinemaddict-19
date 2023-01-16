@@ -17,13 +17,13 @@ export default class FilmsPresenter {
   }
 
   init() {
-    this.iconFilm = [...this.filmsModel.getFilms()];
+    const iconFilm = [...this.filmsModel.getFilms()];
     render(this.filmComponent, this.filmContainer);
     render(this.filmList, this.filmComponent.getElement());
     render(this.filmListComponent, this.filmList.getElement());
 
-    for (let i = 0; i < this.iconFilm.length; i++) {
-      render(new FilmCardView({film: this.iconFilm[i]}), this.filmListComponent.getElement());
+    for (let i = 0; i < iconFilm.length; i++) {
+      render(new FilmCardView({film: iconFilm[i]}), this.filmListComponent.getElement());
     }
 
     render(new ShowMoreButtonView(), this.filmList.getElement());

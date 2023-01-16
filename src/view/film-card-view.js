@@ -1,5 +1,5 @@
 import {createElement} from '../render.js';
-import {humanizeTaskDueDate, humanizeDuration, getdescriptionSize} from '../utils.js';
+import {humanizeFilmDueDate, humanizeDuration, getCroppedDescription} from '../utils.js';
 
 
 function createFilmCardTemplate(film) {
@@ -11,12 +11,12 @@ function createFilmCardTemplate(film) {
           <h3 class="film-card__title">${filmInfo.title}</h3>
           <p class="film-card__rating">${filmInfo.totalRating}</p>
           <p class="film-card__info">
-            <span class="film-card__year">${humanizeTaskDueDate(filmInfo.releaseDate, 'YYYY')}</span>
+            <span class="film-card__year">${humanizeFilmDueDate(filmInfo.releaseDate, 'YYYY')}</span>
             <span class="film-card__duration">${humanizeDuration(filmInfo.duration)}</span>
             <span class="film-card__genre">${filmInfo.genre[0]}</span>
           </p>
           <img src=${filmInfo.poster} alt="" class="film-card__poster">
-          <p class="film-card__description">${getdescriptionSize(filmInfo.description)}</p>
+          <p class="film-card__description">${getCroppedDescription(filmInfo.description)}</p>
           <span class="film-card__comments">${comments.length} comments</span>
         </a>
         <div class="film-card__controls">

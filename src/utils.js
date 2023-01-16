@@ -28,7 +28,7 @@ function getCommentsRandom (comments) {
   return commentArray;
 }
 
-function humanizeTaskDueDate(dueDate, dateFormat) {
+function humanizeFilmDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
 }
 
@@ -40,9 +40,9 @@ function humanizeDuration (duration) {
   return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
 }
 
-function getdescriptionSize (description) {
+function getCroppedDescription (description) {
   return (description.length > 139) ? `${description.slice(0, 139)}...` : `${description}`;
 }
 
 
-export {getRandomArrayElement, getRandomNumber, getDescriptionRandom, getCommentsRandom, humanizeTaskDueDate, humanizeDuration, getdescriptionSize};
+export {getRandomArrayElement, getRandomNumber, getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, getCroppedDescription};

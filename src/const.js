@@ -18,8 +18,8 @@ const DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ' 
     'Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. ' +
     'In rutrum ac purus sit amet tempus.';
 
-const COMMENT_EMMOTION = ['smile', 'sleeping', 'puke', 'angry'];
+const COMMENT_EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
-export {POSTERS, DESCRIPTION, COMMENT_EMMOTION};
+export {POSTERS, DESCRIPTION, COMMENT_EMOTIONS};
 
 
