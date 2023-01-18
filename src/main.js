@@ -3,7 +3,6 @@ import UserNameView from './view/user-name-view.js';
 import FilterView from './view/filter-view.js';
 import SortView from './view/sort-view.js';
 import FilmsPresenter from './presenter/films-presenter.js';
-//import InfoPopUpView from './view/info-pop-up-view.js';
 import FooterStatisticsView from './view/footer-statistics-view.js';
 import FilmsModel from './model/films-model.js';
 

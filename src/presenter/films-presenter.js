@@ -13,7 +13,7 @@ const bodyElement = document.querySelector('body');
 export default class FilmsPresenter {
   #filmContainer = null;
   #filmsModel = null;
-  #filmsModelContainer = [];
+  #filmsModelContainer = null;
 
   #filmComponent = new FilmsView();
   #filmList = new FilmsListView();
@@ -31,15 +31,14 @@ export default class FilmsPresenter {
     render(this.#filmList, this.#filmComponent.element);
     render(this.#filmListComponent, this.#filmList.element);
 
-
     for (let i = 0; i < this.#filmsModelContainer.length; i++){
-      this.#renderFilms(this.#filmsModelContainer[i]);
+      this.#renderFilm(this.#filmsModelContainer[i]);
     }
 
     render(new ShowMoreButtonView(), this.#filmList.element);
   }
 
-  #renderFilms(filmModelCard) {
+  #renderFilm(filmModelCard) {
     const filmCardComponent = new FilmCardView({filmModelCard});
     const infoPopUpComponent = new InfoPopUpView({filmModelCard});
 
