@@ -35,8 +35,8 @@ function createInfoPopUpCommentTemplate(comments){
 }
 
 
-function createInfoPopUpTemplate(film) {
-  const {comments, filmInfo} = film;
+function createInfoPopUpTemplate(filmModelCard) {
+  const {comments, filmInfo} = filmModelCard;
 
   const genreTemplate = createInfoPopUpGenreTemplate(filmInfo.genre);
 
@@ -150,25 +150,28 @@ function createInfoPopUpTemplate(film) {
   );
 }
 export default class InfoPopUpView {
-  constructor({film}){
-    this.film = film;
+  #filmModelCard = null;
+  #element = null;
+
+  constructor({filmModelCard}){
+    this.#filmModelCard = filmModelCard;
   }
 
 
-  getTemplate() {
-    return createInfoPopUpTemplate(this.film);
+  get template() {
+    return createInfoPopUpTemplate(this.#filmModelCard);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
 

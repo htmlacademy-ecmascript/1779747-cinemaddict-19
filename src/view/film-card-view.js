@@ -2,8 +2,9 @@ import {createElement} from '../render.js';
 import {humanizeFilmDueDate, humanizeDuration, getCroppedDescription} from '../utils.js';
 
 
-function createFilmCardTemplate(film) {
-  const {comments, filmInfo} = film;
+function createFilmCardTemplate(filmModelCard) {
+
+  const {comments, filmInfo} = filmModelCard;
 
   return (
     `<article class="film-card">
@@ -28,25 +29,26 @@ function createFilmCardTemplate(film) {
   );
 }
 export default class FilmCardView {
+  #element = null;
+  #filmModelCard = null;
 
-  constructor({film}){
-    this.film = film;
+  constructor({filmModelCard}){
+    this.#filmModelCard = filmModelCard;
   }
 
-  getTemplate() {
-    return createFilmCardTemplate(this.film);
+  get template() {
+    return createFilmCardTemplate(this.#filmModelCard);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
 
