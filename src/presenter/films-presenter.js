@@ -7,7 +7,7 @@ import ShowMoreButtonView from '../view/show-more-button-view.js';
 import {render} from '../render.js';
 import NoFilmView from '../view/no-film-view.js';
 
-const FILM_MODEL_CARD_PER_STEP = 5;
+const FILM_CARD_PER_STEP = 5;
 
 const bodyElement = document.querySelector('body');
 
@@ -16,7 +16,7 @@ export default class FilmsPresenter {
   #filmContainer = null;
   #filmsModel = null;
   #filmsModelContainer = null;
-  #renderedFilmModelCard = FILM_MODEL_CARD_PER_STEP;
+  #renderedFilmModelCard = FILM_CARD_PER_STEP;
 
   #filmComponent = new FilmsView();
   #filmList = new FilmsListView();
@@ -32,10 +32,10 @@ export default class FilmsPresenter {
 
   #showMoreButtonClickHandler = () => {
     this.#filmsModelContainer
-      .slice(this.#renderedFilmModelCard, this.#renderedFilmModelCard + FILM_MODEL_CARD_PER_STEP)
+      .slice(this.#renderedFilmModelCard, this.#renderedFilmModelCard + FILM_CARD_PER_STEP)
       .forEach((filmModelCard) => this.#renderFilm(filmModelCard));
 
-    this.#renderedFilmModelCard += FILM_MODEL_CARD_PER_STEP;
+    this.#renderedFilmModelCard += FILM_CARD_PER_STEP;
 
     if (this.#renderedFilmModelCard >= this.#filmsModelContainer.length) {
       this.#showMoreButtonComponent.element.remove();
@@ -56,12 +56,12 @@ export default class FilmsPresenter {
     render(this.#filmListComponent, this.#filmList.element);
 
 
-    for (let i = 0; i < Math.min(this.#filmsModelContainer.length, FILM_MODEL_CARD_PER_STEP); i++) {
+    for (let i = 0; i < Math.min(this.#filmsModelContainer.length, FILM_CARD_PER_STEP); i++) {
       this.#renderFilm(this.#filmsModelContainer[i]);
     }
 
 
-    if (this.#filmsModelContainer.length > FILM_MODEL_CARD_PER_STEP) {
+    if (this.#filmsModelContainer.length > FILM_CARD_PER_STEP) {
       this.#showMoreButtonComponent = new ShowMoreButtonView();
       render(this.#showMoreButtonComponent, this.#filmList.element);
       this.#showMoreButtonComponent.element.addEventListener('click', this.#showMoreButtonClickHandler);
