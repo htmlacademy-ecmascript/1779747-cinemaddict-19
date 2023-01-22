@@ -1,10 +1,7 @@
 import {createElement} from '../render.js';
 
 function createNoFilmTemplate() {
-  return (
-    `<section class="films-list">
-      <h2 class="films-list__title">There are no movies in our database</h2>`
-  );
+  return '<h2 class="films-list__title">There are no movies in our database</h2>';
 }
 
 export default class NoFilmView {

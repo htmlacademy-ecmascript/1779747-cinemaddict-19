@@ -7,10 +7,10 @@ import ShowMoreButtonView from '../view/show-more-button-view.js';
 import {render} from '../render.js';
 import NoFilmView from '../view/no-film-view.js';
 
+const FILM_MODEL_CARD_PER_STEP = 5;
 
 const bodyElement = document.querySelector('body');
 
-const FILM_MODEL_CARD_PER_STEP = 5;
 
 export default class FilmsPresenter {
   #filmContainer = null;
@@ -30,8 +30,7 @@ export default class FilmsPresenter {
     this.#filmsModel = filmsModel;
   }
 
-  #showMoreButtonClickHandler = (evt) => {
-    evt.preventDefault();
+  #showMoreButtonClickHandler = () => {
     this.#filmsModelContainer
       .slice(this.#renderedFilmModelCard, this.#renderedFilmModelCard + FILM_MODEL_CARD_PER_STEP)
       .forEach((filmModelCard) => this.#renderFilm(filmModelCard));
