@@ -1,10 +1,10 @@
+import {render, remove} from '../framework/render.js';
 import FilmsView from '../view/films-view.js';
 import FilmsListView from '../view/films-list-view.js';
 import FilmsListContainerView from '../view/films-list-container-view.js';
 import FilmCardView from '../view/film-card-view.js';
 import InfoPopUpView from '../view/info-pop-up-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
-import {render} from '../render.js';
 import NoFilmView from '../view/no-film-view.js';
 
 const FILM_CARD_PER_STEP = 5;
@@ -30,7 +30,7 @@ export default class FilmsPresenter {
     this.#filmsModel = filmsModel;
   }
 
-  #showMoreButtonClickHandler = () => {
+  #handleShowMoreButtonClickHandler = () => {
     this.#filmsModelContainer
       .slice(this.#renderedFilmModelCard, this.#renderedFilmModelCard + FILM_CARD_PER_STEP)
       .forEach((filmModelCard) => this.#renderFilm(filmModelCard));
@@ -38,8 +38,7 @@ export default class FilmsPresenter {
     this.#renderedFilmModelCard += FILM_CARD_PER_STEP;
 
     if (this.#renderedFilmModelCard >= this.#filmsModelContainer.length) {
-      this.#showMoreButtonComponent.element.remove();
-      this.#showMoreButtonComponent.removeElement();
+      remove(this.#showMoreButtonComponent);
     }
   };
 
@@ -62,29 +61,15 @@ export default class FilmsPresenter {
 
 
     if (this.#filmsModelContainer.length > FILM_CARD_PER_STEP) {
-      this.#showMoreButtonComponent = new ShowMoreButtonView();
+      this.#showMoreButtonComponent = new ShowMoreButtonView({
+        onClick: this.#handleShowMoreButtonClickHandler
+      });
       render(this.#showMoreButtonComponent, this.#filmList.element);
-      this.#showMoreButtonComponent.element.addEventListener('click', this.#showMoreButtonClickHandler);
-
     }
-
   }
 
   #renderFilm(filmModelCard) {
-    const filmCardComponent = new FilmCardView({filmModelCard});
-    const infoPopUpComponent = new InfoPopUpView({filmModelCard});
 
-    const openPopUp = () => {
-      bodyElement.appendChild(infoPopUpComponent.element);
-      bodyElement.classList.add('.hide-overflow');
-
-    };
-
-    const closePopUp = () => {
-      bodyElement.removeChild(infoPopUpComponent.element);
-      bodyElement.classList.remove('.hide-overflow');
-
-    };
     const escKeyDownPopUp = (evt) => {
       if (evt.key === 'Escape' || evt.key === 'Esc') {
         evt.preventDefault();
@@ -93,15 +78,31 @@ export default class FilmsPresenter {
       }
     };
 
-    filmCardComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
-      openPopUp();
-      document.addEventListener('keydown', escKeyDownPopUp);
+    const filmCardComponent = new FilmCardView({
+      filmModelCard,
+      onFilmCardClick: () => {
+        openPopUp();
+        document.addEventListener('keydown', escKeyDownPopUp);
+      }
     });
 
-    infoPopUpComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
-      closePopUp();
-      document.removeEventListener('keydown', escKeyDownPopUp);
+    const infoPopUpComponent = new InfoPopUpView({
+      filmModelCard,
+      onCrossClick: () => {
+        closePopUp();
+        document.removeEventListener('keydown', escKeyDownPopUp);
+      }
     });
+    function openPopUp () {
+      bodyElement.appendChild(infoPopUpComponent.element);
+      bodyElement.classList.add('.hide-overflow');
+    }
+
+    function closePopUp () {
+      bodyElement.removeChild(infoPopUpComponent.element);
+      bodyElement.classList.remove('.hide-overflow');
+    }
+
     render(filmCardComponent, this.#filmListComponent.element);
   }
 }

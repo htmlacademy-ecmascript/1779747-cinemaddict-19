@@ -1,4 +1,4 @@
-import {render} from './render.js';
+import {render} from './framework/render.js';
 import UserNameView from './view/user-name-view.js';
 import FilterView from './view/filter-view.js';
 import SortView from './view/sort-view.js';
