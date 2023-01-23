@@ -6,6 +6,7 @@ function createShowMoreButtonTemplate() {
 
 export default class ShowMoreButtonView{
   #element = null;
+
   get template() {
     return createShowMoreButtonTemplate();
   }
