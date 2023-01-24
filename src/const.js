@@ -20,6 +20,12 @@ const DESCRIPTION = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ' 
 
 const COMMENT_EMOTIONS = ['smile', 'sleeping', 'puke', 'angry'];
 
-export {POSTERS, DESCRIPTION, COMMENT_EMOTIONS};
+const FilterType = {
+  WATCHLIST: 'Watchlist',
+  HISTORY: 'History',
+  FAVORITE: 'Favorite',
+};
+
+export {POSTERS, DESCRIPTION, COMMENT_EMOTIONS, FilterType};
 
 

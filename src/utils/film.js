@@ -1,13 +1,6 @@
 import dayjs from 'dayjs';
+import { getRandomArrayElement } from './common.js';
 
-function getRandomArrayElement(items) {
-  return items[Math.floor(Math.random() * items.length)];
-}
-
-function getRandomNumber(min, max){
-  const r = Math.random() * (max - min) + min;
-  return Math.floor(r);
-}
 
 function getDescriptionRandom (description) {
   const desc = description.split('. ').map((i)=>i.replace(/\.*$/,'.'));
@@ -45,4 +38,4 @@ function getCroppedDescription (description) {
 }
 
 
-export {getRandomArrayElement, getRandomNumber, getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, getCroppedDescription};
+export {getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, getCroppedDescription};

@@ -1,4 +1,5 @@
-import {getRandomArrayElement, getDescriptionRandom, getCommentsRandom} from '../utils.js';
+import {getDescriptionRandom, getCommentsRandom} from '../utils/film.js';
+import { getRandomArrayElement } from '../utils/common.js';
 import {POSTERS, DESCRIPTION} from '../const.js';
 import {mockComments} from './comment.js';
 

@@ -1,10 +1,10 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizeFilmDueDate, humanizeDuration} from '../utils.js';
+import {humanizeFilmDueDate, humanizeDuration} from '../utils/film.js';
 import {mockComments} from '../mock/comment.js';
 
 
 function createInfoPopUpGenreTemplate(genres){
-  return (`${Object.entries(genres).map(([genre]) =>
+  return (`${genres.map((genre) =>
     `<span class="film-details__genre">${genre}</span>`).join('')
   }`
   );
@@ -151,22 +151,22 @@ function createInfoPopUpTemplate(filmModelCard) {
 }
 export default class InfoPopUpView extends AbstractView {
   #filmModelCard = null;
-  #handleCrossClick = null;
+  #handlePopUpClick = null;
 
-  constructor({filmModelCard, onCrossClick}) {
+  constructor({filmModelCard, onPopUpClick}) {
     super();
     this.#filmModelCard = filmModelCard;
-    this.#handleCrossClick = onCrossClick;
+    this.#handlePopUpClick = onPopUpClick;
 
-    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#crossClickHandler);
+    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#clickHandler);
   }
 
   get template() {
     return createInfoPopUpTemplate(this.#filmModelCard);
   }
 
-  #crossClickHandler = () => {
-    this.#handleCrossClick();
+  #clickHandler = () => {
+    this.#handlePopUpClick();
   };
 }
 
