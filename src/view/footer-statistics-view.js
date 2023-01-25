@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 
 function createFooterStatisticsTemplate(filmsModel) {
 
-  return `<p>${filmsModel.length} movies inside</p>`;
+  return `<p>${filmsModel.films.length} movies inside</p>`;
 }
 export default class FooterStatisticsView extends AbstractView {
   #filmsModel = null;
