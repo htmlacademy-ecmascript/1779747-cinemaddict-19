@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import {humanizeFilmDueDate, humanizeDuration, getCroppedDescription} from '../utils.js';
+import {humanizeFilmDueDate, humanizeDuration, getCroppedDescription} from '../utils/film.js';
 
 
 function createFilmCardTemplate(filmModelCard) {
