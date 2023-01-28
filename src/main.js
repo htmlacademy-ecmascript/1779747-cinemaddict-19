@@ -13,7 +13,6 @@ const siteMainElement = document.querySelector('.main');
 const footerElement = document.querySelector('.footer__statistics');
 const filmsModel = new FilmsModel();
 const filmsPresenter = new FilmsPresenter({filmContainer: siteMainElement, filmsModel});
-
 const filters = generateFilter(filmsModel.films);
 
 render(new UserNameView(), siteHeaderElement);

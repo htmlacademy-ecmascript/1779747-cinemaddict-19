@@ -1,3 +1,4 @@
+import {nanoid} from 'nanoid';
 import {getDescriptionRandom, getCommentsRandom} from '../utils/film.js';
 import { getRandomArrayElement } from '../utils/common.js';
 import {POSTERS, DESCRIPTION} from '../const.js';
@@ -6,7 +7,6 @@ import {mockComments} from './comment.js';
 
 const mockFilms = [
   {
-    id: 0,
     comments: getCommentsRandom(mockComments),
     filmInfo: {
       title: 'A Little Pony Without The Carpet',
@@ -39,7 +39,6 @@ const mockFilms = [
     }
   },
   {
-    id: 1,
     comments: getCommentsRandom(mockComments),
     filmInfo: {
       title: 'The Dance of Life',
@@ -70,7 +69,6 @@ const mockFilms = [
     }
   },
   {
-    id: 2,
     comments: getCommentsRandom(mockComments),
     filmInfo: {
       title: 'Sagebrush Trail',
@@ -101,7 +99,6 @@ const mockFilms = [
     }
   },
   {
-    id: 3,
     comments: getCommentsRandom(mockComments),
     filmInfo: {
       title: 'The Man with the Golden Arm',
@@ -133,7 +130,6 @@ const mockFilms = [
     }
   },
   {
-    id: 4,
     comments: getCommentsRandom(mockComments),
     filmInfo: {
       title: 'Santa Claus Conquers the Martians',
@@ -167,6 +163,9 @@ const mockFilms = [
 ];
 
 function getRandomFilm() {
-  return getRandomArrayElement(mockFilms);
+  return {
+    id: nanoid(),
+    ...getRandomArrayElement(mockFilms)
+  };
 }
 export {getRandomFilm, mockFilms};
