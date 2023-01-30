@@ -61,7 +61,7 @@ export default class CardFilmPresenter {
 
     remove(prevFilmCardComponent);
     remove(prevInfoPopUpComponent);
-  };
+  }
 
   #escKeyDownPopUp = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
