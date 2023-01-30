@@ -1,10 +1,11 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeFilmDueDate, humanizeDuration, getCroppedDescription} from '../utils/film.js';
+import { setFilmCardActiveClass } from '../utils/common.js';
 
 
 function createFilmCardTemplate(filmModelCard) {
 
-  const {comments, filmInfo} = filmModelCard;
+  const {comments, filmInfo, userDetails} = filmModelCard;
 
   return (
     `<article class="film-card">
@@ -21,9 +22,9 @@ function createFilmCardTemplate(filmModelCard) {
           <span class="film-card__comments">${comments.length} comments</span>
         </a>
         <div class="film-card__controls">
-          <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
-          <button class="film-card__controls-item film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
-          <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
+          <button class="film-card__controls-item film-card__controls-item--add-to-watchlist ${setFilmCardActiveClass(userDetails.watchlist)}" type="button">Add to watchlist</button>
+          <button class="film-card__controls-item film-card__controls-item--mark-as-watched ${setFilmCardActiveClass(userDetails.alreadyWatched)}" type="button">Mark as watched</button>
+          <button class="film-card__controls-item film-card__controls-item--favorite ${setFilmCardActiveClass(userDetails.favorite)}" type="button">Mark as favorite</button>
         </div>
       </article>`
   );
@@ -31,13 +32,27 @@ function createFilmCardTemplate(filmModelCard) {
 export default class FilmCardView extends AbstractView {
   #filmModelCard = null;
   #handleFilmCardClick = null;
+  #handleWatchListClick = null;
+  #handleWatchedClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({filmModelCard, onFilmCardClick}){
+  constructor({filmModelCard, onFilmCardClick,
+    onWatchListClick, onWatchedClick, onFavoriteClick}){
     super();
     this.#filmModelCard = filmModelCard;
     this.#handleFilmCardClick = onFilmCardClick;
+    this.#handleWatchListClick = onWatchListClick;
+    this.#handleWatchedClick = onWatchedClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
-    this.element.querySelector('.film-card__link').addEventListener('click', this.#clickFilmCardHandler);
+    this.element.querySelector('.film-card__link')
+      .addEventListener('click', this.#clickFilmCardHandler);
+    this.element.querySelector('.film-card__controls-item--add-to-watchlist')
+      .addEventListener('click', this.#watchListHandler);
+    this.element.querySelector('.film-card__controls-item--mark-as-watched')
+      .addEventListener('click', this.#watchedHandler);
+    this.element.querySelector('.film-card__controls-item--favorite')
+      .addEventListener('click', this.#favoriteHandler);
   }
 
   get template() {
@@ -46,5 +61,20 @@ export default class FilmCardView extends AbstractView {
 
   #clickFilmCardHandler = () => {
     this.#handleFilmCardClick();
+  };
+
+  #watchListHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleWatchListClick();
+  };
+
+  #watchedHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleWatchedClick();
+  };
+
+  #favoriteHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }

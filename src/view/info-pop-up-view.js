@@ -1,6 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import {humanizeFilmDueDate, humanizeDuration} from '../utils/film.js';
 import {mockComments} from '../mock/comment.js';
+import { setPopUpActiveClass } from '../utils/common.js';
 
 
 function createInfoPopUpGenreTemplate(genres){
@@ -36,7 +37,7 @@ function createInfoPopUpCommentTemplate(comments){
 
 
 function createInfoPopUpTemplate(filmModelCard) {
-  const {comments, filmInfo} = filmModelCard;
+  const {comments, filmInfo, userDetails} = filmModelCard;
 
   const genreTemplate = createInfoPopUpGenreTemplate(filmInfo.genre);
 
@@ -101,9 +102,9 @@ function createInfoPopUpTemplate(filmModelCard) {
         </div>
   
         <section class="film-details__controls">
-          <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-          <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-          <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watchlist ${setPopUpActiveClass(userDetails.watchlist)}" id="watchlist" name="watchlist">Add to watchlist</button>
+          <button type="button" class="film-details__control-button film-details__control-button--watched ${setPopUpActiveClass(userDetails.alreadyWatched)}" id="watched" name="watched">Already watched</button>
+          <button type="button" class="film-details__control-button film-details__control-button--favorite ${setPopUpActiveClass(userDetails.favorite)}" id="favorite" name="favorite">Add to favorites</button>
         </section>
       </div>
   
@@ -152,14 +153,29 @@ function createInfoPopUpTemplate(filmModelCard) {
 export default class InfoPopUpView extends AbstractView {
   #filmModelCard = null;
   #handlePopUpClick = null;
+  #handleWatchListClick = null;
+  #handleWatchedClick = null;
+  #handleFavoriteClick = null;
 
-  constructor({filmModelCard, onPopUpClick}) {
+  constructor({filmModelCard, onPopUpClick,
+    onWatchListClick, onWatchedClick, onFavoriteClick}){
     super();
     this.#filmModelCard = filmModelCard;
     this.#handlePopUpClick = onPopUpClick;
+    this.#handleWatchListClick = onWatchListClick;
+    this.#handleWatchedClick = onWatchedClick;
+    this.#handleFavoriteClick = onFavoriteClick;
 
-    this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.film-details__close-btn')
+      .addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.film-details__control-button--watchlist')
+      .addEventListener('click', this.#watchListHandler);
+    this.element.querySelector('.film-details__control-button--watched')
+      .addEventListener('click', this.#watchedHandler);
+    this.element.querySelector('.film-details__control-button--favorite')
+      .addEventListener('click', this.#favoriteHandler);
   }
+
 
   get template() {
     return createInfoPopUpTemplate(this.#filmModelCard);
@@ -167,6 +183,21 @@ export default class InfoPopUpView extends AbstractView {
 
   #clickHandler = () => {
     this.#handlePopUpClick();
+  };
+
+  #watchListHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleWatchListClick();
+  };
+
+  #watchedHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleWatchedClick();
+  };
+
+  #favoriteHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFavoriteClick();
   };
 }
 
