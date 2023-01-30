@@ -22,7 +22,7 @@ export default class CardFilmPresenter {
   }
 
 
-  init = (filmModelCard) => {
+  init (filmModelCard) {
     this.#filmModelCard = filmModelCard;
 
     const prevFilmCardComponent = this.#filmCardComponent;
