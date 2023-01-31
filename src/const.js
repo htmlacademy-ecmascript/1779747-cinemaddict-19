@@ -1,4 +1,7 @@
 
+const FILM_CARD_PER_STEP = 5;
+const TOP_AND_MOST_COUNT = 2;
+
 const POSTERS = [
   './images/posters/made-for-each-other.png',
   './images/posters/popeye-meets-sinbad.png',
@@ -26,6 +29,11 @@ const FilterType = {
   FAVORITE: 'Favorite',
 };
 
-export {POSTERS, DESCRIPTION, COMMENT_EMOTIONS, FilterType};
+const SortType = {
+  SORT_BY_DEFAULT: 'Sort by default',
+  SORT_BY_DATE: 'Sort by date',
+  SORT_BY_RATING: 'Sort by rating',
+};
+export {POSTERS, DESCRIPTION, COMMENT_EMOTIONS, FilterType, FILM_CARD_PER_STEP, TOP_AND_MOST_COUNT, SortType};
 
 
