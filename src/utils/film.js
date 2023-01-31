@@ -43,25 +43,13 @@ function updateFilmCard(filmCards, update) {
 
 }
 
-const getTopRatedFilms = (filmsModelContainers) => filmsModelContainers.slice().sort((a, b) => {
-  if (a.filmInfo.totalRating < b.filmInfo.totalRating) {
-    return 1;
-  }
-  if (a.filmInfo.totalRating > b.filmInfo.totalRating) {
-    return -1;
-  }
-  return 0;
-}).slice(0, TOP_AND_MOST_COUNT);
+function getTopRatedFilms (filmsModelContainer) {
+  return filmsModelContainer.sort(sortByRating).slice(0, TOP_AND_MOST_COUNT);
+}
 
-const getMostCommentedFilms = (filmsModelContainers) => filmsModelContainers.slice().sort((a, b) => {
-  if (a.comments.length < b.comments.length) {
-    return 1;
-  }
-  if (a.comments.length > b.comments.length) {
-    return -1;
-  }
-  return 0;
-}).slice(0, TOP_AND_MOST_COUNT);
+function getMostCommentedFilms (filmsModelContainer) {
+  return filmsModelContainer.sort(sortByCommented).slice(0, TOP_AND_MOST_COUNT);
+}
 
 function getWeightForNull(dateA, dateB) {
   if (dateA === null && dateB === null) {
@@ -108,8 +96,8 @@ function sortByRating(filmA, filmB) {
   return 0;
 }
 
-function setActiveClass (element, className) {
-  return element ? className : '';
+function setActiveClass (isActive, className) {
+  return isActive ? className : '';
 }
 
 export {getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, getCroppedDescription, updateFilmCard, getMostCommentedFilms, getRandomArrayElement, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating};

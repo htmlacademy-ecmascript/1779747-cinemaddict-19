@@ -9,9 +9,9 @@ import MostCommentedView from '../view/most-commented-view.js';
 import CardFilmPresenter from './card-film-presenter.js';
 import FilterView from '../view/filter-view.js';
 import SortView from '../view/sort-view.js';
-import { FILM_CARD_PER_STEP } from '../const.js';
+import { FILM_CARD_PER_STEP} from '../const.js';
 import { SortType } from '../const.js';
-import { updateFilmCard, sortByCommented, sortByDate, sortByRating } from '../utils/film.js';
+import { updateFilmCard, getTopRatedFilms, getMostCommentedFilms, sortByDate, sortByRating } from '../utils/film.js';
 import {generateFilter} from '../mock/filter.js';
 
 export default class FilmsPresenter {
@@ -102,6 +102,7 @@ export default class FilmsPresenter {
         break;
       case SortType.SORT_BY_RATING:
         this.#filmsModelContainer.sort(sortByRating);
+
         break;
       default:
         this.#filmsModelContainer = [...this.#sourcedFilmsModelContainer];
@@ -162,8 +163,8 @@ export default class FilmsPresenter {
     render(this.#topRatedList, this.#filmComponent.element);
     render(this.#topRatedContainer, this.#topRatedList.element);
 
-    this.#mostRatedFilms = this.#filmsModelContainer.sort(sortByRating).slice(0, 2);
-    this.#mostCommentedFilms = this.#mostCommentedFilms = this.#filmsModelContainer.sort(sortByCommented).slice(0, 2);
+    this.#mostRatedFilms = getTopRatedFilms(this.#filmsModelContainer);
+    this.#mostCommentedFilms = getMostCommentedFilms(this.#filmsModelContainer);
 
     this.#mostRatedFilms.forEach((mostRatedFilms) => this.#renderFilm(mostRatedFilms, this.#topRatedContainer.element));
 
