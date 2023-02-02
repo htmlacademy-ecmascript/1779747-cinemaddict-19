@@ -15,3 +15,5 @@ render(new UserNameView(), siteHeaderElement);
 render(new FooterStatisticsView({filmsModel}), footerElement);
 
 filmsPresenter.init();
+
+

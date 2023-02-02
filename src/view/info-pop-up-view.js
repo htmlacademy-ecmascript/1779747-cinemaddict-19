@@ -1,8 +1,7 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeFilmDueDate, humanizeDuration} from '../utils/film.js';
 import {mockComments} from '../mock/comment.js';
 import { setActiveClass } from '../utils/film.js';
-
 
 function createInfoPopUpGenreTemplate(genres){
   return (`${genres.map((genre) =>
@@ -35,9 +34,40 @@ function createInfoPopUpCommentTemplate(comments){
   return liCommentTag;
 }
 
+function createInfoPopUpCommentFormTemplate(emojiLabel, commentInput){
 
-function createInfoPopUpTemplate(filmModelCard) {
-  const {comments, filmInfo, userDetails} = filmModelCard;
+  return (`<div class="film-details__add-emoji-label">
+${emojiLabel ? `<img src="./images/emoji/${emojiLabel}.png" width="55" height="55" alt="emoji-smile">` : ''}
+</div>
+ <label class="film-details__comment-label">
+    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${commentInput ? commentInput : ''}</textarea>
+  </label>
+
+  <div class="film-details__emoji-list">
+    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+    <label class="film-details__emoji-label" for="emoji-smile">
+      <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+    </label>
+
+    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+    <label class="film-details__emoji-label" for="emoji-sleeping">
+      <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+    </label>
+
+    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+    <label class="film-details__emoji-label" for="emoji-puke">
+      <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+    </label>
+
+    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+    <label class="film-details__emoji-label" for="emoji-angry">
+      <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+    </label>
+  </div>`);
+}
+
+function createInfoPopUpTemplate(state) {
+  const {comments, filmInfo, userDetails} = state;
 
   const genreTemplate = createInfoPopUpGenreTemplate(filmInfo.genre);
 
@@ -116,33 +146,7 @@ function createInfoPopUpTemplate(filmModelCard) {
           ${createInfoPopUpCommentTemplate(comments)}
           </ul>
           <form class="film-details__new-comment" action="" method="get">
-            <div class="film-details__add-emoji-label"></div>
-  
-            <label class="film-details__comment-label">
-              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-            </label>
-  
-            <div class="film-details__emoji-list">
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-              <label class="film-details__emoji-label" for="emoji-smile">
-                <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-              </label>
-  
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-              <label class="film-details__emoji-label" for="emoji-sleeping">
-                <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-              </label>
-  
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-              <label class="film-details__emoji-label" for="emoji-puke">
-                <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-              </label>
-  
-              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-              <label class="film-details__emoji-label" for="emoji-angry">
-                <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-              </label>
-            </div>
+          ${createInfoPopUpCommentFormTemplate(state.emojisLabel, state.commentInput)}
           </form>
         </section>
       </div>
@@ -150,8 +154,7 @@ function createInfoPopUpTemplate(filmModelCard) {
   </section>`
   );
 }
-export default class InfoPopUpView extends AbstractView {
-  #filmModelCard = null;
+export default class InfoPopUpView extends AbstractStatefulView {
   #handlePopUpClick = null;
   #handleWatchListClick = null;
   #handleWatchedClick = null;
@@ -160,12 +163,16 @@ export default class InfoPopUpView extends AbstractView {
   constructor({filmModelCard, onPopUpClick,
     onWatchListClick, onWatchedClick, onFavoriteClick}){
     super();
-    this.#filmModelCard = filmModelCard;
+    this._setState(InfoPopUpView.parseCommentToState(filmModelCard));
     this.#handlePopUpClick = onPopUpClick;
     this.#handleWatchListClick = onWatchListClick;
     this.#handleWatchedClick = onWatchedClick;
     this.#handleFavoriteClick = onFavoriteClick;
 
+    this._restoreHandlers();
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('.film-details__close-btn')
       .addEventListener('click', this.#clickHandler);
     this.element.querySelector('.film-details__control-button--watchlist')
@@ -174,16 +181,68 @@ export default class InfoPopUpView extends AbstractView {
       .addEventListener('click', this.#watchedHandler);
     this.element.querySelector('.film-details__control-button--favorite')
       .addEventListener('click', this.#favoriteHandler);
+    this.element.querySelectorAll('.visually-hidden').forEach((elem) => elem
+      .addEventListener('click', this.#emojisLabelHandler));
+    this.element.querySelector('.film-details__comment-input')
+      .addEventListener('input', this.#commentInputHandler);
+    // this.element.querySelectorAll('.film-details__comment-delete').forEach((elem) => elem
+    //   .addEventListener('click', this.#deleteCommentHandler));
+    // this.element.addEventListener('scroll', this.#scrollHandler);
   }
 
 
   get template() {
-    return createInfoPopUpTemplate(this.#filmModelCard);
+    return createInfoPopUpTemplate(this._state);
+  }
+
+  reset(filmModelCard) {
+    this.updateElement(
+      InfoPopUpView.parseCommentToState(filmModelCard),
+    );
   }
 
   #clickHandler = () => {
-    this.#handlePopUpClick();
+    this.#handlePopUpClick(InfoPopUpView.parseStateToComment(this._state));
   };
+
+  static parseCommentToState (filmModelCard) {
+    return {...filmModelCard,
+      emojisLabel: null,
+      commentInput: null,
+    };
+  }
+
+  static parseStateToComment (state) {
+    const filmModelCard = {...state};
+    delete filmModelCard.emojisLabel;
+    delete filmModelCard.comment;
+
+    return filmModelCard;
+  }
+
+  #emojisLabelHandler = (evt) => {
+    evt.preventDefault();
+    this.element.querySelector('input[type="radio"]').classList.remove('input[type="radio"]');
+    evt.target.innerHTML = '<input type="radio" checked>';
+    const scroll = this.element.scrollTop;
+    this.updateElement({
+      emojisLabel: evt.target.value,
+    });
+    this.element.scrollTop = scroll;
+
+  };
+
+  #commentInputHandler = (evt) => {
+    evt.preventDefault();
+    this._setState({
+      commentInput: evt.target.value,
+    });
+  };
+
+  // #deleteCommentHandler = (evt) => {
+  //   evt.preventDefault();
+  // };
+
 
   #watchListHandler = (evt) => {
     evt.preventDefault();

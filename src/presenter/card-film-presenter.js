@@ -75,14 +75,15 @@ export default class CardFilmPresenter {
     if (bodyElement.contains(document.querySelector('.film-details'))){
       bodyElement.removeChild(document.querySelector('.film-details'));
     }
-    bodyElement.appendChild(this.#infoPopUpComponent.element);
+    render(this.#infoPopUpComponent, document.body);
     bodyElement.classList.add('.hide-overflow');
     document.addEventListener('keydown', this.#escKeyDownPopUp);
   }
 
   #closePopUp (){
-    bodyElement.removeChild(this.#infoPopUpComponent.element);
+    remove(this.#infoPopUpComponent);
     bodyElement.classList.remove('.hide-overflow');
+    this.#infoPopUpComponent.reset(this.#filmModelCard);
     document.removeEventListener('keydown', this.#escKeyDownPopUp);
   }
 
