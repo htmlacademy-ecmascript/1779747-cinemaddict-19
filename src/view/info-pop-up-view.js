@@ -44,22 +44,22 @@ ${emojiLabel ? `<img src="./images/emoji/${emojiLabel}.png" width="55" height="5
   </label>
 
   <div class="film-details__emoji-list">
-    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile" ${(emojiLabel === 'smile') ? 'checked' : ''}>
     <label class="film-details__emoji-label" for="emoji-smile">
       <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
     </label>
 
-    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping" ${(emojiLabel === 'sleeping') ? 'checked' : ''}>
     <label class="film-details__emoji-label" for="emoji-sleeping">
       <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
     </label>
 
-    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke" ${(emojiLabel === 'puke') ? 'checked' : ''}>
     <label class="film-details__emoji-label" for="emoji-puke">
       <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
     </label>
 
-    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry" ${(emojiLabel === 'angry') ? 'checked' : ''}>
     <label class="film-details__emoji-label" for="emoji-angry">
       <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
     </label>
@@ -205,25 +205,8 @@ export default class InfoPopUpView extends AbstractStatefulView {
     this.#handlePopUpClick(InfoPopUpView.parseStateToComment(this._state));
   };
 
-  static parseCommentToState (filmModelCard) {
-    return {...filmModelCard,
-      emojisLabel: null,
-      commentInput: null,
-    };
-  }
-
-  static parseStateToComment (state) {
-    const filmModelCard = {...state};
-    delete filmModelCard.emojisLabel;
-    delete filmModelCard.comment;
-
-    return filmModelCard;
-  }
-
   #emojisLabelHandler = (evt) => {
     evt.preventDefault();
-    this.element.querySelector('input[type="radio"]').classList.remove('input[type="radio"]');
-    evt.target.innerHTML = '<input type="radio" checked>';
     const scroll = this.element.scrollTop;
     this.updateElement({
       emojisLabel: evt.target.value,
@@ -258,6 +241,22 @@ export default class InfoPopUpView extends AbstractStatefulView {
     evt.preventDefault();
     this.#handleFavoriteClick();
   };
+
+  static parseCommentToState (filmModelCard) {
+    return {...filmModelCard,
+      emojisLabel: null,
+      commentInput: null,
+    };
+  }
+
+  static parseStateToComment (state) {
+    const filmModelCard = {...state};
+    delete filmModelCard.emojisLabel;
+    delete filmModelCard.comment;
+
+    return filmModelCard;
+  }
+
 }
 
 
