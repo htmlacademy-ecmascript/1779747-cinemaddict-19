@@ -1,7 +1,10 @@
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import {humanizeFilmDueDate, humanizeDuration} from '../utils/film.js';
+import {humanizeFilmDueDate, humanizeCommentDueDate, humanizeDuration} from '../utils/film.js';
 import {mockComments} from '../mock/comment.js';
 import { setActiveClass } from '../utils/film.js';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 function createInfoPopUpGenreTemplate(genres){
   return (`${genres.map((genre) =>
@@ -24,7 +27,7 @@ function createInfoPopUpCommentTemplate(comments){
               <p class="film-details__comment-text">${comment}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${author}</span>
-                <span class="film-details__comment-day">${humanizeFilmDueDate(date, 'YYYY/MM/DD HH:mm')}</span>
+                <span class="film-details__comment-day">${humanizeCommentDueDate(date)}</span>
                 <button class="film-details__comment-delete">Delete</button>
               </p>
             </div>
