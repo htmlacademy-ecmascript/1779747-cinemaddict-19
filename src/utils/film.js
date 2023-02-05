@@ -43,11 +43,6 @@ function getCroppedDescription (description) {
   return (description.length > 139) ? `${description.slice(0, 139)}...` : `${description}`;
 }
 
-function updateFilmCard(filmCards, update) {
-  return filmCards.map((filmCard) => filmCard.id === update.id ? update : filmCard);
-
-}
-
 function getTopRatedFilms (filmsModelContainer) {
   return filmsModelContainer.sort(sortByRating).slice(0, TOP_AND_MOST_COUNT);
 }
@@ -105,4 +100,5 @@ function setActiveClass (isActive, className) {
   return isActive ? className : '';
 }
 
-export {getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, humanizeCommentDueDate, getCroppedDescription, updateFilmCard, getMostCommentedFilms, getRandomArrayElement, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating};
+export {getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, humanizeCommentDueDate, getCroppedDescription,
+  getMostCommentedFilms, getRandomArrayElement, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating};
