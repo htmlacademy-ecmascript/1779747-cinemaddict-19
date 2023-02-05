@@ -26,6 +26,11 @@ function humanizeFilmDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
 }
 
+function humanizeCommentDueDate(dueDate) {
+  return dayjs().to(dayjs(humanizeFilmDueDate(dueDate, 'YYYY/MM/DD HH:mm')));
+
+}
+
 function humanizeDuration (duration) {
   const HOUR = 60;
   const hours = Math.floor(duration / HOUR);
@@ -100,4 +105,4 @@ function setActiveClass (isActive, className) {
   return isActive ? className : '';
 }
 
-export {getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, getCroppedDescription, updateFilmCard, getMostCommentedFilms, getRandomArrayElement, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating};
+export {getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, humanizeCommentDueDate, getCroppedDescription, updateFilmCard, getMostCommentedFilms, getRandomArrayElement, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating};
