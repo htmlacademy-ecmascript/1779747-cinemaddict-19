@@ -1,22 +1,23 @@
 import AbstractView from '../framework/view/abstract-view.js';
 
 
-function createFilterFilmTemplate (filter) {
+function createFilterFilmTemplate (filter, currentFilter) {
   const {name, count} = filter;
-
-  return `<a href=#${name} class="main-navigation__item">${name} <span class="main-navigation__item-count">${count}</span></a>`;
+  const filterFilmsTemplate =
+     `<a href="#${name}" class="main-navigation__item ${currentFilter ? 'main-navigation__item--active' : ''}" 
+     data-filter="${name}">${name}${(name === 'All movies')
+  ? '' : `<span class="main-navigation__item-count">${count}</span>`}</a>`;
+  return filterFilmsTemplate;
 }
 
 
-function createFilterTemplate(filters) {
-
+function createFilterTemplate(filters, currentFilter) {
   const filterFilmsTemplate = filters
-    .map((filter) => createFilterFilmTemplate (filter))
+    .map((filter) => createFilterFilmTemplate (filter, filter.name === currentFilter))
     .join('');
 
   return (
     `<nav class="main-navigation">
-    <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
     ${filterFilmsTemplate}
   </nav>`
   );
@@ -24,14 +25,30 @@ function createFilterTemplate(filters) {
 
 export default class FilterView extends AbstractView {
   #filters = null;
+  #currentFilter = null;
+  #handleFilterTypeChange = null;
 
-  constructor({filters}){
+  constructor({filters, currentFilterType, onFilterTypeChange}){
     super();
     this.#filters = filters;
+    this.#currentFilter = currentFilterType;
+    this.#handleFilterTypeChange = onFilterTypeChange;
 
+    this.element.addEventListener('click', this.#filterTypeChangeHandler);
   }
 
   get template() {
-    return createFilterTemplate(this.#filters);
+    return createFilterTemplate(this.#filters, this.#currentFilter);
   }
+
+  #filterTypeChangeHandler = (evt) => {
+    if (evt.target.tagName !== 'A') {
+      return;
+    }
+    const filter = evt.target.dataset.filter;
+    if (filter !== this.#currentFilter) {
+      this.#handleFilterTypeChange(filter);
+    }
+  };
 }
+

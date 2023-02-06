@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import { getRandomArrayElement } from './common.js';
 import { TOP_AND_MOST_COUNT } from '../const.js';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 
 function getDescriptionRandom (description) {
@@ -41,11 +43,6 @@ function humanizeDuration (duration) {
 
 function getCroppedDescription (description) {
   return (description.length > 139) ? `${description.slice(0, 139)}...` : `${description}`;
-}
-
-function updateFilmCard(filmCards, update) {
-  return filmCards.map((filmCard) => filmCard.id === update.id ? update : filmCard);
-
 }
 
 function getTopRatedFilms (filmsModelContainer) {
@@ -105,4 +102,5 @@ function setActiveClass (isActive, className) {
   return isActive ? className : '';
 }
 
-export {getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, humanizeCommentDueDate, getCroppedDescription, updateFilmCard, getMostCommentedFilms, getRandomArrayElement, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating};
+export {getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, humanizeCommentDueDate, getCroppedDescription,
+  getMostCommentedFilms, getRandomArrayElement, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating};
