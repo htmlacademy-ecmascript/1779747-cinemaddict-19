@@ -4,9 +4,9 @@ import { SortType } from '../const.js';
 function createSortTemplate(currentSortType) {
   return (
     `<ul class="sort">
-    <li><a href="#" class="sort__button ${currentSortType === SortType.SORT_BY_DEFAULT ? 'sort__button--active' : ''}" data-sort-type="${SortType.SORT_BY_DEFAULT}">Sort by default</a></li>
-    <li><a href="#" class="sort__button ${currentSortType === SortType.SORT_BY_DATE ? 'sort__button--active' : ''}" data-sort-type="${SortType.SORT_BY_DATE}">Sort by date</a></li>
-    <li><a href="#" class="sort__button ${currentSortType === SortType.SORT_BY_RATING ? 'sort__button--active' : ''}" data-sort-type="${SortType.SORT_BY_RATING}">Sort by rating</a></li>
+    <li><a href="#${SortType.SORT_BY_DEFAULT}" class="sort__button ${currentSortType === SortType.SORT_BY_DEFAULT ? 'sort__button--active' : ''}" data-sort-type="${SortType.SORT_BY_DEFAULT}">Sort by default</a></li>
+    <li><a href="#${SortType.SORT_BY_DATE}" class="sort__button ${currentSortType === SortType.SORT_BY_DATE ? 'sort__button--active' : ''}" data-sort-type="${SortType.SORT_BY_DATE}">Sort by date</a></li>
+    <li><a href="#${SortType.SORT_BY_RATING}" class="sort__button ${currentSortType === SortType.SORT_BY_RATING ? 'sort__button--active' : ''}" data-sort-type="${SortType.SORT_BY_RATING}">Sort by rating</a></li>
   </ul>`
   );
 }

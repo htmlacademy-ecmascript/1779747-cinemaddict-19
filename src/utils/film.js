@@ -1,6 +1,8 @@
 import dayjs from 'dayjs';
 import { getRandomArrayElement } from './common.js';
 import { TOP_AND_MOST_COUNT } from '../const.js';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(relativeTime);
 
 
 function getDescriptionRandom (description) {

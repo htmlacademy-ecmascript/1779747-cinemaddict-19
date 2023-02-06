@@ -168,7 +168,7 @@ export default class FilmsPresenter {
     render(this.#showMoreButtonComponent, this.#filmList.element);
   }
 
-  #clearFilmList({resetRenderedFilmCardCount = true, resetSortType = true} = {}) {
+  #clearFilmList({resetRenderedFilmCardCount = false, resetSortType = false} = {}) {
     const filmCardCount = this.films.length;
     this.#cardFilmPresenters.forEach((presenter) => presenter.destroy());
     this.#cardFilmPresenters.clear();

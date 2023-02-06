@@ -1,11 +1,9 @@
-import {render, replace, remove, RenderPosition} from '../framework/render.js';
+import {render, replace, remove} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import InfoPopUpView from '../view/info-pop-up-view.js';
 import {UserAction, UpdateType} from '../const.js';
 
-
 const bodyElement = document.querySelector('body');
-
 
 export default class CardFilmPresenter {
 
@@ -28,6 +26,7 @@ export default class CardFilmPresenter {
   init (filmModelCard, commentsModel) {
     this.#filmModelCard = filmModelCard;
     this.#commentsModel = commentsModel;
+
 
     const prevFilmCardComponent = this.#filmCardComponent;
     const prevInfoPopUpComponent = this.#infoPopUpComponent;
@@ -83,7 +82,7 @@ export default class CardFilmPresenter {
     if (bodyElement.contains(document.querySelector('.film-details'))){
       bodyElement.removeChild(document.querySelector('.film-details'));
     }
-    render(this.#infoPopUpComponent, document.body);
+    render(this.#infoPopUpComponent, bodyElement);
     bodyElement.classList.add('.hide-overflow');
     document.addEventListener('keydown', this.#escKeyDownPopUp);
   }
@@ -122,8 +121,8 @@ export default class CardFilmPresenter {
               !this.#filmModelCard.userDetails.favorite } });
   };
 
-  #handleDeleteCommentClick = (filmModelCard) => {
-    this.#filmModelCard.comments = this.#filmModelCard.comments.filter((value) => value !== Number(filmModelCard.commentIdDelete));
+  #handleDeleteCommentClick = (commentId) => {
+    this.#filmModelCard.comments = this.#filmModelCard.comments.filter((value) => value !== Number(commentId));
     const filmCard = this.#filmModelCard;
     this.#handleDataChange(
       UserAction.UPDATE_FILM_CARD,
@@ -132,13 +131,13 @@ export default class CardFilmPresenter {
     );
   };
 
-  #handleCommentAdd = (filmModelCard) => {
+  #handleCommentAdd = (emojisLabel, commentInput) => {
     const commentUser = {
       id: this.#commentsModel.length,
       author: 'Ilya O\'Reilly',
-      comment: filmModelCard.commentInput,
+      comment: commentInput,
       date: new Date().toISOString(),
-      emotion: filmModelCard.emojisLabel
+      emotion: emojisLabel
     };
 
     this.#filmModelCard.comments.push(commentUser.id);

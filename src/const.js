@@ -36,9 +36,9 @@ const FilterType = {
 };
 
 const SortType = {
-  SORT_BY_DEFAULT: 'Sort by default',
-  SORT_BY_DATE: 'Sort by date',
-  SORT_BY_RATING: 'Sort by rating',
+  SORT_BY_DEFAULT: 'Sort_by_default',
+  SORT_BY_DATE: 'Sort_by_date',
+  SORT_BY_RATING: 'Sort_by_rating',
 };
 
 const UserAction = {

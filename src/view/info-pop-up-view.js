@@ -3,9 +3,7 @@ import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import {humanizeFilmDueDate, humanizeCommentDueDate, humanizeDuration} from '../utils/film.js';
 import { setActiveClass } from '../utils/film.js';
 import {COMMENT_EMOTIONS} from '../const';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
+
 
 function createInfoPopUpGenreTemplate(genres){
   return (`${genres.map((genre) =>
@@ -154,7 +152,7 @@ function createInfoPopUpTemplate(state, commentsModel) {
           </form>
         </section>
       </div>
-    </div>
+      </div>
   </section>`
   );
 }
@@ -237,16 +235,13 @@ export default class InfoPopUpView extends AbstractStatefulView {
   #commentAddHandler = (evt) => {
     if (evt.key === 'Enter' && (evt.metaKey || evt.ctrlKey)
       && this._state.commentInput && this._state.emojisLabel) {
-      this.#handleCommentAdd(this._state);
+      this.#handleCommentAdd(this._state.emojisLabel, this._state.commentInput);
     }
   };
 
   #deleteCommentHandler = (evt) => {
     evt.preventDefault();
-    this._setState({
-      commentIdDelete : evt.target.dataset.commentId,
-    });
-    this.#handleDeleteCommentClick(this._state);
+    this.#handleDeleteCommentClick(evt.target.dataset.commentId);
   };
 
 
