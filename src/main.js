@@ -1,4 +1,4 @@
-import {render} from './framework/render.js';
+import {render, RenderPosition} from './framework/render.js';
 import UserNameView from './view/user-name-view.js';
 import FilmsPresenter from './presenter/films-presenter.js';
 import FilmsModel from './model/films-model.js';
@@ -40,9 +40,9 @@ const filterPresenter = new FilterPresenter({
   filmsModel
 });
 
-render(new UserNameView(), siteHeaderElement);
+render(new UserNameView(), siteHeaderElement, RenderPosition.BEFOREEND);
 filterPresenter.init();
 filmsPresenter.init();
 filmsModel.init() .finally(() => {
-  render(new FooterStatisticsView({filmsModel}), footerElement);
+  render(new FooterStatisticsView({filmsModel}), footerElement, RenderPosition.BEFOREEND);
 });

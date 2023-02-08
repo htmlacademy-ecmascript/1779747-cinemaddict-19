@@ -14,8 +14,8 @@ function createInfoPopUpGenreTemplate(genres){
 
 function createInfoPopUpCommentTemplate(commentsId, commentsModel){
   let liCommentTag = '';
-  for (const commentId of commentsId){
-    const {author, comment, emotion, date} = commentsModel.find((e) => e.id === commentId);
+  for (const commentModel of commentsModel){
+    const {author, comment, emotion, date} = commentModel;
     liCommentTag += `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
               <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
@@ -25,7 +25,7 @@ function createInfoPopUpCommentTemplate(commentsId, commentsModel){
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${author}</span>
                 <span class="film-details__comment-day">${humanizeCommentDueDate(date)}</span>
-                <button class="film-details__comment-delete" data-comment-id="${commentId}">Delete</button>
+                <button class="film-details__comment-delete" data-comment-id="${commentModel.id}">Delete</button>
               </p>
             </div>
           </li>`;
@@ -143,7 +143,7 @@ function createInfoPopUpTemplate(state, commentsModel) {
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
   
           <ul class="film-details__comments-list">
-          ${createInfoPopUpCommentTemplate(comments, commentsModel)}
+          ${createInfoPopUpCommentTemplate(commentsModel)}
           </ul>
           <form class="film-details__new-comment" action="" method="get">
           ${createInfoPopUpCommentFormTemplate(state.emojisLabel, state.commentInput)}

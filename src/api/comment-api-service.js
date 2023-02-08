@@ -8,7 +8,7 @@ const Method = {
 };
 
 export default class CommentsApiService extends ApiService {
-  async get(filmId) {
+  async getComments(filmId) {
     return this._load({ url: `comments/${filmId}` })
       .then(ApiService.parseResponse);
   }
