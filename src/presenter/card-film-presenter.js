@@ -1,4 +1,4 @@
-import {render, replace, remove} from '../framework/render.js';
+import {render, replace, remove, RenderPosition} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import InfoPopUpView from '../view/info-pop-up-view.js';
 import {UserAction, UpdateType} from '../const.js';
@@ -28,7 +28,7 @@ export default class CardFilmPresenter {
     this.#filmModelCard = filmModelCard;
     this.#commentsModel = commentsModel;
 
-    const commentsModelApi = await this.#commentsModel.getComment(this.#filmModelCard.id);
+    const commentsFilmCard = await this.#commentsModel.getComments(this.#filmModelCard.id);
 
     const prevFilmCardComponent = this.#filmCardComponent;
     const prevInfoPopUpComponent = this.#infoPopUpComponent;
@@ -45,7 +45,7 @@ export default class CardFilmPresenter {
 
     this.#infoPopUpComponent = new InfoPopUpView({
       filmModelCard: this.#filmModelCard,
-      commentsModel: commentsModelApi,
+      commentsModel: commentsFilmCard,
       onPopUpClick: this.#handleClosePopUp,
       onWatchListClick:  this.#handleWatchListClick,
       onWatchedClick: this.#handleWatchedClick,
@@ -56,7 +56,7 @@ export default class CardFilmPresenter {
     );
 
     if (prevFilmCardComponent === null || prevInfoPopUpComponent === null){
-      render(this.#filmCardComponent, this.#filmContainerTeg);
+      render(this.#filmCardComponent, this.#filmContainerTeg, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -124,7 +124,7 @@ export default class CardFilmPresenter {
   };
 
   #handleDeleteCommentClick = (commentId) => {
-    this.#filmModelCard.comments = this.#filmModelCard.comments.filter((e) => e !== commentId);
+    this.#filmModelCard.comments = this.#filmModelCard.comments.filter((el) => el !== commentId);
     const filmCard = this.#filmModelCard;
 
     this.#handleDataChange(

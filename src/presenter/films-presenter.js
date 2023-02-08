@@ -146,7 +146,7 @@ export default class FilmsPresenter {
     render(this.#sortComponent, this.#filmComponent.element, RenderPosition.BEFOREBEGIN);
   }
 
-  async #renderFilm(film, filmContainer) {
+  #renderFilm(film, filmContainer) {
     const cardFilmPresenter = new CardFilmPresenter({
       filmContainerTeg: filmContainer,
       onDataChange: this.#handleViewAction,
@@ -176,7 +176,7 @@ export default class FilmsPresenter {
     this.#showMoreButtonComponent = new ShowMoreButtonView({
       onClick: this.#handleShowMoreButtonClick
     });
-    render(this.#showMoreButtonComponent, this.#filmList.element);
+    render(this.#showMoreButtonComponent, this.#filmList.element, RenderPosition.BEFOREEND);
   }
 
   #clearFilmList({resetRenderedFilmCardCount = false, resetSortType = false} = {}) {
@@ -200,8 +200,8 @@ export default class FilmsPresenter {
   }
 
   #renderFilmList() {
-    render(this.#filmComponent, this.#filmContainer);
-    render(this.#filmList, this.#filmComponent.element);
+    render(this.#filmComponent, this.#filmContainer, RenderPosition.BEFOREEND);
+    render(this.#filmList, this.#filmComponent.element, RenderPosition.BEFOREEND);
 
     if (this.#isLoading) {
       this.#renderLoading();
@@ -216,7 +216,7 @@ export default class FilmsPresenter {
       return;
     }
 
-    render(this.#filmListComponent, this.#filmList.element);
+    render(this.#filmListComponent, this.#filmList.element, RenderPosition.AFTERBEGIN);
 
     this.#renderFilms(films.slice(0, Math.min(filmCardCount, this.#renderedFilmCardCount)), this.#filmListComponent.element);
 
