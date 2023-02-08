@@ -12,13 +12,11 @@ function createInfoPopUpGenreTemplate(genres){
   );
 }
 
-function createInfoPopUpCommentTemplate(comments, commentsModel){
+function createInfoPopUpCommentTemplate(commentsId, commentsModel){
   let liCommentTag = '';
-  for (const commentId of comments){
-    if (commentsModel.find((x) => x.id === commentId)) {
-      const {author, comment, emotion, date} = commentsModel[commentId];
-
-      liCommentTag += `<li class="film-details__comment">
+  for (const commentModel of commentsModel){
+    const {author, comment, emotion, date} = commentModel;
+    liCommentTag += `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
               <img src="./images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
             </span>
@@ -27,11 +25,10 @@ function createInfoPopUpCommentTemplate(comments, commentsModel){
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${author}</span>
                 <span class="film-details__comment-day">${humanizeCommentDueDate(date)}</span>
-                <button class="film-details__comment-delete" data-comment-id="${commentId}">Delete</button>
+                <button class="film-details__comment-delete" data-comment-id="${commentModel.id}">Delete</button>
               </p>
             </div>
           </li>`;
-    }
   }
   return liCommentTag;
 }
@@ -69,6 +66,7 @@ ${emojiLabel ? `<img src="./images/emoji/${emojiLabel}.png" width="55" height="5
 }
 
 function createInfoPopUpTemplate(state, commentsModel) {
+
   const {comments, filmInfo, userDetails} = state;
 
   const genreTemplate = createInfoPopUpGenreTemplate(filmInfo.genre);
@@ -113,7 +111,7 @@ function createInfoPopUpTemplate(state, commentsModel) {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${humanizeFilmDueDate(filmInfo.releaseDate, 'D MMMM YYYY')}</td>
+                <td class="film-details__cell">${humanizeFilmDueDate(filmInfo.release.date, 'D MMMM YYYY')}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Duration</td>
@@ -121,7 +119,7 @@ function createInfoPopUpTemplate(state, commentsModel) {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">${filmInfo.releaseCountry}</td>
+                <td class="film-details__cell">${filmInfo.release.releaseCountry}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Genres</td>
@@ -145,7 +143,7 @@ function createInfoPopUpTemplate(state, commentsModel) {
           <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
   
           <ul class="film-details__comments-list">
-          ${createInfoPopUpCommentTemplate(comments, commentsModel)}
+          ${createInfoPopUpCommentTemplate(commentsModel)}
           </ul>
           <form class="film-details__new-comment" action="" method="get">
           ${createInfoPopUpCommentFormTemplate(state.emojisLabel, state.commentInput)}
@@ -236,6 +234,7 @@ export default class InfoPopUpView extends AbstractStatefulView {
     if (evt.key === 'Enter' && (evt.metaKey || evt.ctrlKey)
       && this._state.commentInput && this._state.emojisLabel) {
       this.#handleCommentAdd(this._state.emojisLabel, this._state.commentInput);
+      this.element.scrollTo(0, this._state.scrollPosition);
     }
   };
 

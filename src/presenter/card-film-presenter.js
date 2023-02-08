@@ -1,4 +1,4 @@
-import {render, replace, remove} from '../framework/render.js';
+import {render, replace, remove, RenderPosition} from '../framework/render.js';
 import FilmCardView from '../view/film-card-view.js';
 import InfoPopUpView from '../view/info-pop-up-view.js';
 import {UserAction, UpdateType} from '../const.js';
@@ -23,10 +23,12 @@ export default class CardFilmPresenter {
   }
 
 
-  init (filmModelCard, commentsModel) {
+  async init (filmModelCard, commentsModel) {
+
     this.#filmModelCard = filmModelCard;
     this.#commentsModel = commentsModel;
 
+    const commentsFilmCard = await this.#commentsModel.getComments(this.#filmModelCard.id);
 
     const prevFilmCardComponent = this.#filmCardComponent;
     const prevInfoPopUpComponent = this.#infoPopUpComponent;
@@ -43,7 +45,7 @@ export default class CardFilmPresenter {
 
     this.#infoPopUpComponent = new InfoPopUpView({
       filmModelCard: this.#filmModelCard,
-      commentsModel: this.#commentsModel,
+      commentsModel: commentsFilmCard,
       onPopUpClick: this.#handleClosePopUp,
       onWatchListClick:  this.#handleWatchListClick,
       onWatchedClick: this.#handleWatchedClick,
@@ -54,7 +56,7 @@ export default class CardFilmPresenter {
     );
 
     if (prevFilmCardComponent === null || prevInfoPopUpComponent === null){
-      render(this.#filmCardComponent, this.#filmContainerTeg);
+      render(this.#filmCardComponent, this.#filmContainerTeg, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -122,25 +124,21 @@ export default class CardFilmPresenter {
   };
 
   #handleDeleteCommentClick = (commentId) => {
-    this.#filmModelCard.comments = this.#filmModelCard.comments.filter((value) => value !== Number(commentId));
+    this.#filmModelCard.comments = this.#filmModelCard.comments.filter((el) => el !== commentId);
     const filmCard = this.#filmModelCard;
+
     this.#handleDataChange(
-      UserAction.UPDATE_FILM_CARD,
+      UserAction.DELETE_COMMENT,
       UpdateType.PATCH,
-      filmCard
+      {commentId, filmCard}
     );
   };
 
   #handleCommentAdd = (emojisLabel, commentInput) => {
     const commentUser = {
-      id: this.#commentsModel.length,
-      author: 'Ilya O\'Reilly',
       comment: commentInput,
-      date: new Date().toISOString(),
       emotion: emojisLabel
     };
-
-    this.#filmModelCard.comments.push(commentUser.id);
     const filmCard = this.#filmModelCard;
 
     this.#handleDataChange (
