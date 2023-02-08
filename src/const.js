@@ -51,6 +51,7 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
 };
 
 export {POSTERS, DESCRIPTION, COMMENT_EMOTIONS, FilterType, FILM_CARD_PER_STEP, TOP_AND_MOST_COUNT, SortType, UserAction, UpdateType};
