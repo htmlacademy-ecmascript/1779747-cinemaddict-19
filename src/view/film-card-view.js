@@ -4,7 +4,6 @@ import { setActiveClass } from '../utils/film.js';
 
 
 function createFilmCardTemplate(filmModelCard) {
-
   const {comments, filmInfo, userDetails} = filmModelCard;
 
   return (

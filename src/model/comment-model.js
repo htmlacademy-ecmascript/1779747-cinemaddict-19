@@ -1,36 +1,71 @@
 import Observable from '../framework/observable.js';
-import {mockComments} from '../mock/comment.js';
 
 
 export default class CommentModel extends Observable {
-  #comments = mockComments;
+  #commentsApiService = null;
+  #comments = [];
 
-  get comments() {
+  constructor({commentsApiService}){
+    super();
+    this.#commentsApiService = commentsApiService;
+  }
+
+  async getComment(filmId) {
+    this.#comments = await this.#commentsApiService.get(filmId);
     return this.#comments;
   }
 
 
-  addСomment (updateType, update) {
-    this.#comments = [
-      ...this.#comments,
-      update
-    ];
+  async addComment (updateType, commentUser, filmCardId) {
+    try {
+      const newComment = this.#adaptToClient(await this.#commentsApiService.addComment(commentUser, filmCardId));
+      this._notify(updateType, newComment);
 
-    this._notify(updateType, update);
+    } catch (err) {
+      throw new Error('Can\'t add comment');
+    }
   }
 
-  deleteСomment (updateType, update) {
-    const index = this.#comments.findIndex((comment) => comment.id === update);
-
-    if (index === -1) {
-      throw new Error('Can\'t delete unexisting comment');
+  async deleteComment(updateType, commentId, filmCard) {
+    try {
+      await this.#commentsApiService.deleteComment(commentId);
+      this._notify(updateType, filmCard);
+    } catch (err) {
+      throw new Error('Can\'t delete comment');
     }
+  }
 
-    this.#comments = [
-      ...this.#comments.slice(0, index),
-      ...this.#comments.slice(index + 1),
-    ];
+  #adaptToClient(film) {
+    const adaptedFilm = {
+      comments: film['comments'],
+      movie: {
+        id: film['movie']['id'],
+        comments: film['movie']['comments'],
+        filmInfo: {
+          ...film['movie']['film_info'],
+          ageRating: film['movie']['film_info']['age_rating'],
+          alternativeTitle: film['movie']['film_info']['alternative_title'],
+          totalRating: film['movie']['film_info']['total_rating'],
+          release: {
+            date: film['movie']['film_info']['release']['date'],
+            releaseCountry: film['movie']['film_info']['release']['release_country']
+          }
+        },
+        userDetails: {
+          ...film['movie']['user_details'],
+          alreadyWatched: film['movie']['user_details']['already_watched'],
+          watchingDate: film['movie']['user_details']['watching_date'],
+        }
+      }
+    };
 
-    this._notify(updateType);
+
+    delete adaptedFilm['movie']['filmInfo']['age_rating'];
+    delete adaptedFilm['movie']['filmInfo']['alternative_title'];
+    delete adaptedFilm['movie']['filmInfo']['total_rating'];
+    delete adaptedFilm['movie']['userDetails']['already_watched'];
+    delete adaptedFilm['movie']['userDetails']['watching_date'];
+
+    return adaptedFilm;
   }
 }

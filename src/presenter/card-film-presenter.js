@@ -23,10 +23,12 @@ export default class CardFilmPresenter {
   }
 
 
-  init (filmModelCard, commentsModel) {
+  async init (filmModelCard, commentsModel) {
+
     this.#filmModelCard = filmModelCard;
     this.#commentsModel = commentsModel;
 
+    const commentsModelApi = await this.#commentsModel.getComment(this.#filmModelCard.id);
 
     const prevFilmCardComponent = this.#filmCardComponent;
     const prevInfoPopUpComponent = this.#infoPopUpComponent;
@@ -43,7 +45,7 @@ export default class CardFilmPresenter {
 
     this.#infoPopUpComponent = new InfoPopUpView({
       filmModelCard: this.#filmModelCard,
-      commentsModel: this.#commentsModel,
+      commentsModel: commentsModelApi,
       onPopUpClick: this.#handleClosePopUp,
       onWatchListClick:  this.#handleWatchListClick,
       onWatchedClick: this.#handleWatchedClick,
@@ -122,25 +124,21 @@ export default class CardFilmPresenter {
   };
 
   #handleDeleteCommentClick = (commentId) => {
-    this.#filmModelCard.comments = this.#filmModelCard.comments.filter((value) => value !== Number(commentId));
+    this.#filmModelCard.comments = this.#filmModelCard.comments.filter((e) => e !== commentId);
     const filmCard = this.#filmModelCard;
+
     this.#handleDataChange(
-      UserAction.UPDATE_FILM_CARD,
+      UserAction.DELETE_COMMENT,
       UpdateType.PATCH,
-      filmCard
+      {commentId, filmCard}
     );
   };
 
   #handleCommentAdd = (emojisLabel, commentInput) => {
     const commentUser = {
-      id: this.#commentsModel.length,
-      author: 'Ilya O\'Reilly',
       comment: commentInput,
-      date: new Date().toISOString(),
       emotion: emojisLabel
     };
-
-    this.#filmModelCard.comments.push(commentUser.id);
     const filmCard = this.#filmModelCard;
 
     this.#handleDataChange (
