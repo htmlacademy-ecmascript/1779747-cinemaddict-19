@@ -9,7 +9,7 @@ import FilterPresenter from './presenter/filter-presenter.js';
 import FilmsApiService from './api/films-api-service.js';
 import CommentsApiService from './api/comment-api-service.js';
 
-const AUTHORIZATION = 'Basic KAgTy79ypzeC8FO';
+const AUTHORIZATION = 'Basic KAgTyr79ypzefefrrrC8FO';
 const END_POINT = 'https://19.ecmascript.pages.academy/cinemaddict';
 
 const siteHeaderElement = document.querySelector('.header');

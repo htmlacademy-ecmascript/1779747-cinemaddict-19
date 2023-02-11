@@ -88,16 +88,26 @@ export default class FilmsPresenter {
     }
   };
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_FILM_CARD:
         this.#filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.ADD_COMMENT:
-        this.#commentsModel.addComment(updateType, update.commentUser, update.filmCard.id);
+        this.#cardFilmPresenters.get(update.filmCard.id).setDeleting({resetIsDisabled: true, resetIsDeleting: true});
+        try {
+          await this.#commentsModel.addComment(updateType, update.commentUser, update.filmCard.id);
+        }catch(error){
+          this.#cardFilmPresenters.get(update.filmCard.id).setAAD();
+        }
         break;
       case UserAction.DELETE_COMMENT:
-        this.#commentsModel.deleteComment(updateType, update.commentId, update.filmCard);
+        this.#cardFilmPresenters.get(update.filmCard.id).setDeleting({resetIsDisabled: true, resetIsDeleting: true});
+        try {
+          await this.#commentsModel.deleteComment(updateType, update.commentId, update.filmCard);
+        }catch(error){
+          this.#cardFilmPresenters.get(update.filmCard.id).setAborting();
+        }
         break;
     }
   };
