@@ -24,7 +24,6 @@ export default class CardFilmPresenter {
 
 
   async init (filmModelCard, commentsModel) {
-
     this.#filmModelCard = filmModelCard;
     this.#commentsModel = commentsModel;
 
@@ -32,7 +31,6 @@ export default class CardFilmPresenter {
 
     const prevFilmCardComponent = this.#filmCardComponent;
     const prevInfoPopUpComponent = this.#infoPopUpComponent;
-
 
     this.#filmCardComponent = new FilmCardView({
       filmModelCard: this.#filmModelCard,
@@ -72,8 +70,23 @@ export default class CardFilmPresenter {
     remove(prevInfoPopUpComponent);
   }
 
+
+  setDeleting({resetIsDisabled = false, resetIsDeleting = false} = {}){
+    this.#infoPopUpComponent.updateElement({
+      isDisabled: resetIsDeleting,
+      isDeleting: resetIsDisabled,
+    });
+  }
+
+  setAborting() {
+    this.#infoPopUpComponent.shake();
+
+  }
+
+
   #escKeyDownPopUp = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if ((evt.key === 'Escape' || evt.key === 'Esc')
+      && (!this.#infoPopUpComponent._state.isDeleting && !this.#infoPopUpComponent._state.isDisabled)) {
       evt.preventDefault();
       this.#closePopUp();
       document.removeEventListener('keydown', this.#escKeyDownPopUp);
@@ -149,7 +162,9 @@ export default class CardFilmPresenter {
   };
 
   #handleOpenPopUp = () => {
-    this.#openPopUp();
+    if (!this.#infoPopUpComponent._state.isDeleting && !this.#infoPopUpComponent._state.isDisabled) {
+      this.#openPopUp();
+    }
   };
 
   #handleClosePopUp = () => {
