@@ -87,13 +87,13 @@ export default class FilmsPresenter {
         try {
           await this.#commentsModel.addComment(updateType, update.commentUser, update.filmCard.id);
         }catch(error){
-          this.#cardFilmPresenters.get(update.filmCard.id).setAAD();
+          this.#cardFilmPresenters.get(update.filmCard.id).setAborting();
         }
         break;
       case UserAction.DELETE_COMMENT:
         this.#cardFilmPresenters.get(update.filmCard.id).setDeleting({resetIsDisabled: true, resetIsDeleting: true});
         try {
-          await setTimeout(() => this.#commentsModel.deleteComment(updateType, update.commentId, update.filmCard), 5000);
+          await this.#commentsModel.deleteComment(updateType, update.commentId, update.filmCard);
         }catch(error){
           this.#cardFilmPresenters.get(update.filmCard.id).setAborting();
         }
@@ -149,7 +149,7 @@ export default class FilmsPresenter {
     const cardFilmPresenter = new CardFilmPresenter({
       filmContainerTeg: filmContainer,
       onDataChange: this.#handleViewAction,
-      onModeChange: this.#handleModelEvent
+      //onModeChange: this.#handleModelEvent
     });
     cardFilmPresenter.init(film, this.#commentsModel);
     this.#cardFilmPresenters.set(film.id, cardFilmPresenter);
