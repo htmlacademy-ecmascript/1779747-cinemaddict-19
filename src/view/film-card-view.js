@@ -12,7 +12,7 @@ function createFilmCardTemplate(filmModelCard) {
           <h3 class="film-card__title">${filmInfo.title}</h3>
           <p class="film-card__rating">${filmInfo.totalRating}</p>
           <p class="film-card__info">
-            <span class="film-card__year">${humanizeFilmDueDate(filmInfo.releaseDate, 'YYYY')}</span>
+            <span class="film-card__year">${humanizeFilmDueDate(filmInfo.release.date, 'YYYY')}</span>
             <span class="film-card__duration">${humanizeDuration(filmInfo.duration)}</span>
             <span class="film-card__genre">${filmInfo.genre[0]}</span>
           </p>
