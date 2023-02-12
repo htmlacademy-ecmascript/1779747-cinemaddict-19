@@ -200,6 +200,10 @@ export default class InfoPopUpView extends AbstractStatefulView {
     return createInfoPopUpTemplate(this._state, this.#commentsModel);
   }
 
+  getIsDeletingComment () {
+    return !((!this._state.isDeleting && !this._state.isDisabled));
+  }
+
   reset(filmModelCard) {
     this.updateElement(
       InfoPopUpView.parseCommentToState(filmModelCard),

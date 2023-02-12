@@ -7,9 +7,9 @@ import FooterStatisticsView from './view/footer-statistics-view.js';
 import FilterModel from './model/filter-model.js';
 import FilterPresenter from './presenter/filter-presenter.js';
 import FilmsApiService from './api/films-api-service.js';
-import CommentsApiService from './api/comment-api-service.js';
+import CommentsApiService from './api/comments-api-service.js';
 
-const AUTHORIZATION = 'Basic KAgTyr79ypzefefrrrC8FO';
+const AUTHORIZATION = 'Basic KAgTyr79ypzefefedrrrC8FO';
 const END_POINT = 'https://19.ecmascript.pages.academy/cinemaddict';
 
 const siteHeaderElement = document.querySelector('.header');
