@@ -85,8 +85,7 @@ export default class CardFilmPresenter {
 
 
   #escKeyDownPopUp = (evt) => {
-    if ((evt.key === 'Escape' || evt.key === 'Esc')
-      && (!this.#infoPopUpComponent._state.isDeleting && !this.#infoPopUpComponent._state.isDisabled)) {
+    if ((evt.key === 'Escape' || evt.key === 'Esc') && !this.#infoPopUpComponent.getIsDeletingComment()){
       evt.preventDefault();
       this.#closePopUp();
       document.removeEventListener('keydown', this.#escKeyDownPopUp);
@@ -162,9 +161,7 @@ export default class CardFilmPresenter {
   };
 
   #handleOpenPopUp = () => {
-    if (!this.#infoPopUpComponent._state.isDeleting && !this.#infoPopUpComponent._state.isDisabled) {
-      this.#openPopUp();
-    }
+    this.#openPopUp();
   };
 
   #handleClosePopUp = () => {

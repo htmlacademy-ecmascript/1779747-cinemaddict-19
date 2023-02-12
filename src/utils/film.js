@@ -1,28 +1,8 @@
 import dayjs from 'dayjs';
-import { getRandomArrayElement } from './common.js';
 import { TOP_AND_MOST_COUNT } from '../const.js';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
-
-function getDescriptionRandom (description) {
-  const desc = description.split('. ').map((i)=>i.replace(/\.*$/,'.'));
-  let text = '';
-  for (let i = 0; i <= Math.floor(Math.random() * desc.length); i++){
-    text += `${getRandomArrayElement(desc)} `;
-    text += ' ';
-  }
-  return text;
-}
-
-function getCommentsRandom (comments) {
-  const commentArray = [];
-  const numberComment = Math.floor(Math.random() * comments.length);
-  for (let i = 0; i <= numberComment; i++){
-    commentArray[i] = (Math.floor(Math.random() * comments.length));
-  }
-  return commentArray;
-}
 
 function humanizeFilmDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
@@ -102,5 +82,5 @@ function setActiveClass (isActive, className) {
   return isActive ? className : '';
 }
 
-export {getDescriptionRandom, getCommentsRandom, humanizeFilmDueDate, humanizeDuration, humanizeCommentDueDate, getCroppedDescription,
-  getMostCommentedFilms, getRandomArrayElement, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating};
+export {humanizeFilmDueDate, humanizeDuration, humanizeCommentDueDate, getCroppedDescription,
+  getMostCommentedFilms, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating};
