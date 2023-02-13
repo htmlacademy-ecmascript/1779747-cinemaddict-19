@@ -3,6 +3,10 @@ import { TOP_AND_MOST_COUNT } from '../const.js';
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
 
+function getRandomArrayElement(items) {
+  return items[Math.floor(Math.random() * items.length)];
+}
+
 
 function humanizeFilmDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
@@ -25,12 +29,29 @@ function getCroppedDescription (description) {
   return (description.length > 139) ? `${description.slice(0, 139)}...` : `${description}`;
 }
 
+function equalElementsInFilmCard(arr, value) {
+  for (let i = 0; i < arr.length; i++){
+    if (`arr[i].${value}` !== `arr[i + 1].${value}`){
+      return false;
+    }
+  }
+  return true;
+}
+
 function getTopRatedFilms (filmsModelContainer) {
-  return filmsModelContainer.sort(sortByRating).slice(0, TOP_AND_MOST_COUNT);
+  const sortFilmCard = filmsModelContainer.sort(sortByRating);
+  const value = 'filmInfo.totalRating';
+  return (equalElementsInFilmCard(sortFilmCard, value))
+    ? [getRandomArrayElement(sortFilmCard), getRandomArrayElement(sortFilmCard)]
+    : sortFilmCard.slice(0, TOP_AND_MOST_COUNT);
 }
 
 function getMostCommentedFilms (filmsModelContainer) {
-  return filmsModelContainer.sort(sortByCommented).slice(0, TOP_AND_MOST_COUNT);
+  const sortFilmCard = filmsModelContainer.sort(sortByCommented);
+  const value = 'comments.length';
+  return (equalElementsInFilmCard(sortFilmCard, value))
+    ? [getRandomArrayElement(sortFilmCard), getRandomArrayElement(sortFilmCard)]
+    : sortFilmCard.slice(0, TOP_AND_MOST_COUNT);
 }
 
 function getWeightForNull(dateA, dateB) {
@@ -83,4 +104,4 @@ function setActiveClass (isActive, className) {
 }
 
 export {humanizeFilmDueDate, humanizeDuration, humanizeCommentDueDate, getCroppedDescription,
-  getMostCommentedFilms, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating};
+  getMostCommentedFilms, getTopRatedFilms, setActiveClass, sortByCommented, sortByDate, sortByRating, equalElementsInFilmCard};
