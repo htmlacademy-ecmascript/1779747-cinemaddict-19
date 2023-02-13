@@ -7,9 +7,13 @@ import NoFilmView from '../view/no-film-view.js';
 import CardFilmPresenter from './card-film-presenter.js';
 import SortView from '../view/sort-view.js';
 import LoadingView from '../view/loading-view.js';
+import TopRatedView from '../view/top-rated-view';
+import MostCommentedView from '../view/most-commented-view';
 import { FILM_CARD_PER_STEP, SortType, UpdateType, UserAction, FilterType} from '../const.js';
 import { sortByDate, sortByRating } from '../utils/film.js';
 import {filter} from '../utils/filter.js';
+import { getTopRatedFilms, getMostCommentedFilms} from '../utils/film.js';
+
 
 export default class FilmsPresenter {
   #filmContainer = null;
@@ -17,10 +21,15 @@ export default class FilmsPresenter {
   #commentsModel = null;
   #filterModel = null;
   #cardFilmPresenters = new Map();
+  #topAndMostCard = new Map();
   #loadingComponent = new LoadingView();
   #filmComponent = new FilmsView();
   #filmList = new FilmsListView();
   #filmListComponent = new FilmsListContainerView();
+  #topRatedList = new TopRatedView();
+  #topRatedContainer = new FilmsListContainerView();
+  #mostCommentedList = new MostCommentedView();
+  #mostCommentedContainer = new FilmsListContainerView();
 
   #noFilmMessage = null;
   #showMoreButtonComponent = null;
@@ -30,6 +39,9 @@ export default class FilmsPresenter {
   #currentSortType = SortType.SORT_BY_DEFAULT;
   #filterType = FilterType.ALL;
   #isLoading = true;
+
+  #topRatedFilms = null;
+  #mostCommentedFilms = null;
 
 
   constructor({filmContainer, filmsModel, commentsModel, filterModel}) {
@@ -83,19 +95,32 @@ export default class FilmsPresenter {
         this.#filmsModel.updateFilm(updateType, update);
         break;
       case UserAction.ADD_COMMENT:
-        this.#cardFilmPresenters.get(update.filmCard.id).setDeleting({resetIsDisabled: true, resetIsDeleting: true});
+        if (this.#cardFilmPresenters.get(update.filmCard.id)){
+          this.#cardFilmPresenters.get(update.filmCard.id).setDeleting({resetIsDisabled: true, resetIsDeleting: true});}
+        if (this.#topAndMostCard.get(update.filmCard.id)){
+          this.#topAndMostCard.get(update.filmCard.id).setDeleting({resetIsDisabled: true, resetIsDeleting: true});}
         try {
           await this.#commentsModel.addComment(updateType, update.commentUser, update.filmCard.id);
         }catch(error){
-          this.#cardFilmPresenters.get(update.filmCard.id).setAborting();
+          if (this.#cardFilmPresenters.get(update.filmCard.id)){
+            this.#cardFilmPresenters.get(update.filmCard.id).setAborting();}
+          if (this.#topAndMostCard.get(update.filmCard.id)){
+            this.#topAndMostCard.get(update.filmCard.id).setAborting();}
         }
         break;
       case UserAction.DELETE_COMMENT:
-        this.#cardFilmPresenters.get(update.filmCard.id).setDeleting({resetIsDisabled: true, resetIsDeleting: true});
+        if (this.#cardFilmPresenters.get(update.filmCard.id)){
+          this.#cardFilmPresenters.get(update.filmCard.id).setDeleting({resetIsDisabled: true, resetIsDeleting: true});}
+        if (this.#topAndMostCard.get(update.filmCard.id)){
+          this.#topAndMostCard.get(update.filmCard.id).setDeleting({resetIsDisabled: true, resetIsDeleting: true});}
         try {
-          await this.#commentsModel.deleteComment(updateType, update.commentId, update.filmCard);
+          await
+          setTimeout(() => this.#commentsModel.deleteComment(updateType, update.commentId, update.filmCard), 5000);
         }catch(error){
-          this.#cardFilmPresenters.get(update.filmCard.id).setAborting();
+          if (this.#cardFilmPresenters.get(update.filmCard.id)){
+            this.#cardFilmPresenters.get(update.filmCard.id).setAborting();}
+          if (this.#topAndMostCard.get(update.filmCard.id)){
+            this.#topAndMostCard.get(update.filmCard.id).setAborting();}
         }
         break;
     }
@@ -105,10 +130,17 @@ export default class FilmsPresenter {
     switch (updateType){
       case UpdateType.PATCH:
         if (update.movie){
-          this.#cardFilmPresenters.get(update.movie.id).init(update.movie, this.#commentsModel);
+          if(this.#cardFilmPresenters.get(update.movie.id)){
+            this.#cardFilmPresenters.get(update.movie.id).init(update.movie, this.#commentsModel);}
+          if (this.#topAndMostCard.get(update.movie.id)){
+            this.#topAndMostCard.get(update.movie.id).init(update.movie, this.#commentsModel);}
           return;
         }
-        this.#cardFilmPresenters.get(update.id).init(update, this.#commentsModel);
+        if (this.#cardFilmPresenters.get(update.id)){
+          this.#cardFilmPresenters.get(update.id).init(update, this.#commentsModel);}
+        if (this.#topAndMostCard.get(update.id)){
+          this.#topAndMostCard.get(update.id).init(update, this.#commentsModel);
+        }
         break;
       case UpdateType.MINOR:
         this.#clearFilmList();
@@ -149,10 +181,13 @@ export default class FilmsPresenter {
     const cardFilmPresenter = new CardFilmPresenter({
       filmContainerTeg: filmContainer,
       onDataChange: this.#handleViewAction,
-      //onModeChange: this.#handleModelEvent
     });
     cardFilmPresenter.init(film, this.#commentsModel);
-    this.#cardFilmPresenters.set(film.id, cardFilmPresenter);
+    if(filmContainer === this.#mostCommentedContainer.element || filmContainer === this.#topRatedContainer.element){
+      this.#topAndMostCard.set(film.id, cardFilmPresenter);
+    }else {
+      this.#cardFilmPresenters.set(film.id, cardFilmPresenter);
+    }
   }
 
   #renderFilms(films, filmContainer) {
@@ -182,10 +217,15 @@ export default class FilmsPresenter {
     const filmCardCount = this.films.length;
     this.#cardFilmPresenters.forEach((presenter) => presenter.destroy());
     this.#cardFilmPresenters.clear();
+    this.#topAndMostCard.forEach((presenter) => presenter.destroy());
+    this.#topAndMostCard.clear();
     remove(this.#sortComponent);
     remove(this.#filterComponent);
     remove(this.#noFilmMessage);
     remove(this.#showMoreButtonComponent);
+    remove(this.#filmListComponent);
+    remove(this.#topRatedContainer);
+    remove(this.#mostCommentedContainer);
 
     if(resetRenderedFilmCardCount) {
       this.#renderedFilmCardCount = FILM_CARD_PER_STEP;
@@ -223,6 +263,22 @@ export default class FilmsPresenter {
       this.#renderShowMoreButton();
 
       this.#renderSort();
+      this.#renderTopAndMost(films);
+    }
+  }
+
+  #renderTopAndMost(films) {
+    this.#topRatedFilms = getTopRatedFilms(films);
+    this.#mostCommentedFilms = getMostCommentedFilms(films);
+    if (this.#topRatedFilms.length !== 0){
+      render(this.#topRatedList, this.#filmComponent.element, RenderPosition.BEFOREEND);
+      render(this.#topRatedContainer, this.#topRatedList.element);
+      this.#renderFilms(this.#topRatedFilms, this.#topRatedContainer.element);
+    }
+    if(this.#mostCommentedFilms.length > 0){
+      render(this.#mostCommentedList, this.#filmComponent.element, RenderPosition.BEFOREEND);
+      render(this.#mostCommentedContainer, this.#mostCommentedList.element);
+      this.#renderFilms(this.#mostCommentedFilms, this.#mostCommentedContainer.element);
     }
   }
 
